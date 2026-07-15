@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+    <main id="auth">
+        <h1>Вход</h1>
+        <form action="http://192.168.1.212/auth" method="post">
+            <input type="hidden" name="log_into" value="1">
+
+            <p>Логин:</p>
+            <input type="text" name="login">
+
+            <p>Пароль:</p>
+            <input type="text" name="password">
+
+            <br>
+            <button type="submit">Войти</button>
+            <br>
+        </form>
+        <form action="http://192.168.1.212/auth" method="post">
+            <input type="hidden" name="create_account" value="1">
+            <button type="submit">Создать новый аккаунт</button>
+        </form>
+        <p style="color: red">{{ error }}</p>
+    </main>
+{% endblock %}
