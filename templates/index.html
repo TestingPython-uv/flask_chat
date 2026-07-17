@@ -40,6 +40,7 @@
                             <label for="btn-text">[{{ message.sender }}]: </label>
                             <button onclick="show_msg_funcs('msg-{{ message.index }}')" class="button-link" id="btn-text">{{ message.text }}</button>
                         </div>
+                    {% endif %}
 
                     <div class="msg-funcs" style="display: none;" id="msg-{{ message.index }}">
                         {% if login == message.sender %}
@@ -80,10 +81,17 @@
         socket.on("message", function(data) {
             const msg_fild = document.getElementById("scroll");
             
-            // ТУТ ИЗМЕНИТЬ: надо делать не <p> а <label> и <button> и добавлять index в id
-            const p = document.createElement("p");
-            p.textContent = data.message;
-            msg_fild.appendChild(p);
+            const label_author = document.createElement("label");
+            label_author.textContent = `[${data.sender}]: `;
+            label_author.htmlFor = "button-link";
+            msg_fild.appendChild(label_author);
+
+            const button_text = document.createElement("button");
+            button_text.className = "button-link";
+            button_text.id = "btn-text";
+            button_text.textContent = data.text;
+            button_text.onclick = () => show_msg_funcs(`msg-${data.index}`);
+            msg_fild.appendChild(button_text);
 
             msg_fild.scrollTop = msg_fild.scrollHeight;
         });

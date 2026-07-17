@@ -53,7 +53,7 @@ def handle_message(data):
 
     message_index = db.insert_message(sender, text, "messages")
 
-    emit("message", {"message": f"[{sender}]: {text}", "index": message_index}, room="general")
+    emit("message", {"sender": sender, "text": text, "index": message_index}, room="general")
 
 @socket.on("answer")
 def handle_message_answer(data):
