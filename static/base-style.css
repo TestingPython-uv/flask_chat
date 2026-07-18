@@ -127,3 +127,15 @@ th, td {
     gap: 10px;
     background-color: lightgrey;
 }
+.center-flex {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.button-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}

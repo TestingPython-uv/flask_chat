@@ -9,13 +9,15 @@
 </head>
 <body>
     <header class="space-between">
-        <!-- ТУТ ИЗМЕНИТЬ: сделать data-* кнопке с login и перекидывать на /profile/{{ login }} -->
-        <button class="button-link">
-            <div class="profile-header">
-                <img src="{{ url_for('static', filename='account.png') }}" width="40px" height="40px">
-                <p>{{ login }}</p>
-            <div>
-        </button>
+        <div>
+            <button class="button-link"><img src="{{ url_for('static', filename='burger_menu.png') }}" width="40px" height="40px"></button>
+            <button class="button-link" onclick="window.location.href = '{{ conn_type }}://{{ main_ip }}/profile?user={{ login }}';">
+                <div class="profile-header">
+                    <img src="{{ url_for('static', filename='account.png') }}" width="40px" height="40px">
+                    <p>{{ login }}</p>
+                <div>
+            </button>
+        </div>
         <form action="{{ conn_type }}://{{ main_ip }}/index" method="post">
                 <input type="hidden" name="clear_session" value="1">
                 <button type="submit">Выйти</button>

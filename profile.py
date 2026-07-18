@@ -18,7 +18,7 @@ class ProfileRoute:
     @AuthRoute.check_session
     def profile(self):
         if request.method == 'GET':
-            username = request.args.get("username")
+            username = request.args.get("user")
 
             exists = self.db.check_user_exists(username, "users")
             if exists:
@@ -29,12 +29,14 @@ class ProfileRoute:
                     username=username,
                     creation_time=creation_time,
                     main_ip=self.main_ip,
-                    conn_type=self.conn_type
+                    conn_type=self.conn_type,
+                    login=session.get("login")
                 )
             else:
                 return render_template(
                     self.profile_html,
                     main_ip=self.main_ip,
                     conn_type=self.conn_type,
-                    error="Пользователь не существует"
+                    error="Пользователь не существует",
+                    login=session.get("login")
                 )

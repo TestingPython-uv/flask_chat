@@ -1,8 +1,26 @@
 {% extends 'base.html' %}
-<!-- Аргументы jinja2: [account_name: str] -->
 {% block title %}{{ account_name }}{% endblock %}
 {% block content %}
     <main>
-        hello
+        {% if not error is defined %}
+            <div class="center-flex">
+                <img src="{{ url_for('static', filename='account.png') }}" width="80px" height="80px">
+                <p>{{ username }}</p>
+            </div>
+            <p style="text-align: center;">Дата регистрации: {{ creation_time }}</p>
+            <form action="{{ conn_type }}://{{ main_ip }}/profile" method="post">
+                <input type="hidden" name="main_user" value="{{ login }}">
+                <input type="hidden" name="profile_user" value="{{ username }}">
+
+                <div class="button-center">
+                    <button type="submit">Создать беседу</button>
+                </div>
+            </form>
+        {% else %}
+            <p style="color: red; text-align: center;">Такого пользователя не существует</p>
+        {% endif %}
+        <div class="button-center">
+            <button onclick="window.location.href = '{{ conn_type }}://{{ main_ip }}/index'">Назад</button>
+        </div>
     </main>
 {% endblock %}

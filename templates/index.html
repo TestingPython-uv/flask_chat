@@ -8,7 +8,9 @@
                     {% if message.type == "2" %}
                     <!-- Если это обычное сообщение (не ответ) -->
 
-                        <label for="btn-text">[{{ message.sender }}]: </label>
+                        <button class="button-link" onclick="window.location.href = '{{ conn_type }}://{{ main_ip }}/profile?user={{ message.sender }}'">
+                            [{{ message.sender }}]: 
+                        </button>
                         <button onclick="show_msg_funcs('msg-{{ message.index }}')" class="button-link" id="btn-text">{{ message.text }}</button>
                     {% else %}
                     <!-- Если это ответ на сообщение -->
@@ -22,7 +24,7 @@
                             <p>[{{ message.question_sender }}]: {{ message.question_text }}</p>
                         </div>
                         <div class="answer-sender">
-                            <label for="btn-text">[{{ message.sender }}]: </label>
+                            <button class="button-link">[{{ message.sender }}]: </button>
                             <button onclick="show_msg_funcs('msg-{{ message.index }}')" class="button-link" id="btn-text">{{ message.text }}</button>
                         </div>
                     {% endif %}
