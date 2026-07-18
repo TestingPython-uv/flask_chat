@@ -98,4 +98,13 @@ class DataBase:
                 return user_accounts
             else:
                 raise ValueError("НЕверный тип данных в get_user_accounts")
+            
+    def get_user_creation_time(self, username: str) -> str:
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT creation_time FROM users WHERE login = ?", (username,))
+            creation_time = cursor.fetchone()[0]
+
+            return creation_time
         

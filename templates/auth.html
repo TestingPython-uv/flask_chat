@@ -1,6 +1,11 @@
-{% extends 'base.html' %}
-{% block title %}Вход{% endblock %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+</head>
+<body>
     <main id="auth">
         <h1>Вход</h1>
         <form action="{{ conn_type }}://{{ main_ip }}/auth" method="post">
@@ -22,4 +27,5 @@
         </form>
         <p style="color: red">{{ error }}</p>
     </main>
-{% endblock %}
+</body>
+</html>

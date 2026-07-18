@@ -79,7 +79,7 @@ class AuthRoute:
                 )
     
     @staticmethod
-    def check_session(func):
+    def check_session(func) -> None:
         @wraps(func)
         def wrapper(*args, **kwargs):
             if session.get("login"):
@@ -89,7 +89,7 @@ class AuthRoute:
         return wrapper
     
     @staticmethod
-    def check_admin_session(func):
+    def check_admin_session(func) -> None:
         @wraps(func)
         def wrapper(*args, **kwargs):
             if session.get("login") == "admin":

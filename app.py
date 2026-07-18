@@ -4,6 +4,7 @@ from db import DataBase
 from auth import AuthRoute
 from index import IndexRoute, MainRoute
 from admin import AdminRoute
+from profile import ProfileRoute
 
 app = Flask(__name__)
 app.secret_key = "token"
@@ -20,7 +21,8 @@ tables = [
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             login TEXT,
             password TEXT,
-            ip TEXT
+            ip TEXT,
+            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     """,
     """
@@ -40,6 +42,7 @@ auth_routes = AuthRoute(app, db, main_ip, conn_type)
 index_route = IndexRoute(app, db, socket, main_ip, conn_type)
 main_route = MainRoute(app)
 admin_route = AdminRoute(app, db, main_ip, conn_type)
+profile_route = ProfileRoute(app, db, main_ip, conn_type)
 
 @socket.on("join_room")
 def handle_join_room(data):
