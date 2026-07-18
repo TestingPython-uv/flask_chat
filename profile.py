@@ -1,5 +1,5 @@
 from flask import Flask, session, redirect, url_for, request, render_template
-from auth import Auth
+from auth import AuthRoute
 from db import DataBase
 
 class ProfileRoute:
@@ -15,7 +15,7 @@ class ProfileRoute:
 
         app.add_url_rule("/profile", view_func=self.profile, methods=["GET", 'POST'])
 
-    @Auth.check_session()
+    @AuthRoute.check_session
     def profile(self):
         if request.method == 'GET':
             username = request.args.get("username")

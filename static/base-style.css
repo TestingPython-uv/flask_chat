@@ -101,7 +101,7 @@ th, td {
 }
 .space-between {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
 }
 #answer-fild {

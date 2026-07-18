@@ -40,7 +40,7 @@ class AuthRoute:
 
     def create_account(self):
         if request.method == 'GET':
-            return render_template(self.auth_html, main_ip=self.main_ip, conn_type=self.conn_type)
+            return render_template(self.create_account_html, main_ip=self.main_ip, conn_type=self.conn_type)
         else:
             login = request.form.get("login")
             password = request.form.get("password")
