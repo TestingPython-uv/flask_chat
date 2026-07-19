@@ -97,7 +97,7 @@ class DataBase:
                 user_accounts = len(rows)
                 return user_accounts
             else:
-                raise ValueError("НЕверный тип данных в get_user_accounts")
+                raise ValueError("Неверный тип данных в get_user_accounts")
             
     def get_user_creation_time(self, username: str) -> str:
         with sqlite3.connect(self.db_path) as conn:
@@ -108,3 +108,27 @@ class DataBase:
 
             return creation_time
         
+    def get_user_chats(self, username: str) -> dict[str, list[str]]:
+        """
+            :return:
+                {
+                    "channels": ['ch_name1', 'ch_name2'...],
+                    "friends": ['fr_name1', 'fr_name2'...]
+                }
+        """
+
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT channels_id, friend_users_id FROM users WHERE login = ?", (username,))
+
+            # channels_id, friend_users_id = "x;x;x;"
+            
+            channels_id_str, friends_id_str = cursor.fetchall()
+            channels_id = channels_id_str.split(";") if channels_id_str else []
+            friends_id = friends_id_str.split(";") if friends_id_str else []
+
+            channels_id = [ch for ch in channels_id if ch]
+            friends_id = [fr for fr in friends_id if fr]
+
+            return {"channels": channels_id, "friends": friends_id}

@@ -28,12 +28,21 @@ class IndexRoute:
             if request.form.get("clear_session"):
                 session.pop("login", None)
                 return redirect(url_for("auth"))
+            
             elif request.form.get("admin"):
                 return redirect(url_for("admin"))
+            
             elif request.form.get("check_message"):
                 self.socket.emit("show_msg_funcs", {})
                 return redirect(url_for("index"))
-            return redirect(url_for("index"))
+            
+            elif request.form.get("get_user_chats"):
+                login = session.get("login")
+                chats_data = self.db.get_user_chats(login)
+                return chats_data
+            
+            else:
+                return redirect(url_for("index"))
             
             
 class MainRoute:

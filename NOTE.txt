@@ -1,0 +1,5 @@
+При добавлении логики добавления в друзья:
+    * Посмотреть def get_user_chats (db.py)
+    * Посмотреть function open_local_chats (base.html, <script>)
+    * Также сочитание логики с БД
+

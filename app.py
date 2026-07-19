@@ -16,13 +16,16 @@ conn_type = "http"
 socket = SocketIO(app)
 
 tables = [
+    # channels_id, friend_users_id = "x;x;x;"
     """
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             login TEXT,
             password TEXT,
             ip TEXT,
-            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
+            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+            channels_id TEXT,
+            friend_users_id TEXT
         )
     """,
     """

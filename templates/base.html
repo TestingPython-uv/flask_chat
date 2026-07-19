@@ -7,28 +7,114 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='base-style.css') }}">
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 </head>
-<body>
-    <header class="space-between">
-        <div>
-            <button class="button-link"><img src="{{ url_for('static', filename='burger_menu.png') }}" width="40px" height="40px"></button>
-            <button class="button-link" onclick="window.location.href = '{{ conn_type }}://{{ main_ip }}/profile?user={{ login }}';">
-                <div class="profile-header">
-                    <img src="{{ url_for('static', filename='account.png') }}" width="40px" height="40px">
-                    <p>{{ login }}</p>
-                <div>
-            </button>
+<body class="body-section">
+    <div class="burger-menu" style="display: none;">
+        <div class="left-burger-menu">
+            <button class="button-link shaped" onclick="open_local_chats()"><img src="{{ url_for('static', filename='chat.png') }}" width="40px" height="40px"></button>
         </div>
-        <form action="{{ conn_type }}://{{ main_ip }}/index" method="post">
-                <input type="hidden" name="clear_session" value="1">
-                <button type="submit">Выйти</button>
-        </form>
-        {% if login == 'admin' %}
-            <form action="{{ conn_type }}://{{ main_ip }}/index" method="post">
-                <input type="hidden" name="admin" value="1">
-                <button type="submit">Админ панель</button>
+        <div class="right-burger-menu" style="display: none;">
+            <!-- ТУТ ИЗМЕНИТЬ: в index.py добавить обработку и ответ и зарегать тут -->
+            <form action="{{ conn_type }}://{{ main_ip }}/index" method="post" class="row-form">
+                <input type="hidden" name="find_person" value="1">
+
+                <input type="text" name="person_to_find" placeholder="Найти пользователя">
+                <button type="submit"><img src="{{ url_for('static', filename='find.png') }}" width="40px" height="40px"></button>
             </form>
-        {% endif %}
-    </header>
-    {% block content %}{% endblock %}
+        </div>
+    </div>
+    <section class="base-section">
+        <header class="space-between">
+            <div>
+                <button class="button-link" onclick="show_burger_menu()"><img src="{{ url_for('static', filename='burger_menu.png') }}" width="40px" height="40px"></button>
+                <button class="button-link" onclick="window.location.href = '{{ conn_type }}://{{ main_ip }}/profile?user={{ login }}';">
+                    <div class="profile-header">
+                        <img src="{{ url_for('static', filename='account.png') }}" width="40px" height="40px">
+                        <p>{{ login }}</p>
+                    <div>
+                </button>
+            </div>
+            <form action="{{ conn_type }}://{{ main_ip }}/index" method="post">
+                    <input type="hidden" name="clear_session" value="1">
+                    <button type="submit">Выйти</button>
+            </form>
+            {% if login == 'admin' %}
+                <form action="{{ conn_type }}://{{ main_ip }}/index" method="post">
+                    <input type="hidden" name="admin" value="1">
+                    <button type="submit">Админ панель</button>
+                </form>
+            {% endif %}
+        </header>
+        {% block content %}{% endblock %}
+    </section>
+
+    <script>
+        let is_burger_menu_showed = false;
+        function show_burger_menu() {
+            const burger_menu = document.querySelector(".burger-menu");
+            
+            if (!is_burger_menu_showed) {
+                burger_menu.style.display = "flex";
+                is_burger_menu_showed = true;
+
+                fetch("{{ conn_type }}://{{ main_ip }}/index", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: URLSearchParams({
+                        get_user_chats: "1"
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // ТУТ ИЗМЕНИТЬ: Добавлять на страницу друзей и каналы
+                    // data.channels => ['ch_name1', 'ch_name2']
+                    // data.friends => ['fr_name1', 'fr_name2']
+                    data.channels.forEach(channel => {
+                        const button_channel = document.createElement("button");
+                        button_channel.textContent = channel[0].toUpperCase();
+                        button_channel.classList.app("button-link", "shaped", "channel-icon");
+                        burger_menu.appendChild(button_channel);
+                    });
+                });
+
+            } else {
+                burger_menu.style.display = "none";
+                is_burger_menu_showed = false;
+            }
+        }
+
+        function open_local_chats() {
+            const right_menu = document.querySelector(".right-burger-menu");
+            right_menu.style.display = "flex";
+            right_menu.style.flexDirection = "column";
+
+            const left_burger_menu = document.querySelector(".left-burger-menu");
+            left_burger_menu.style.borderRight = "1px solid grey";
+            left_burger_menu.style.marginRight = "5px";
+
+            fetch("{{ conn_type }}://{{ main_ip }}/index", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: URLSearchParams({
+                        get_user_chats: "1"
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    data.friends.forEach(username => {
+                        const user_chat_button = document.createElement("button");
+                        user_chat_button.innerHTML = `
+                            <img src={{ url_for('static', filename='account.png') }} width='40px' height='40px'>
+                            <p>${username}</p>
+                        `;
+                        user_chat_button.className = "button-link";
+                        // ТУТ ИЗМЕНИТЬ: добавить обработку при нажатии на чат с пользователем;
+                    });
+                });
+        }
+    </script>
 </body>
 </html>

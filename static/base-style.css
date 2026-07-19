@@ -139,3 +139,37 @@ th, td {
     justify-content: center;
     align-items: center;
 }
+.body-section {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+.base-section {
+    width: 100%;
+}
+.burger-menu {
+    border-right: 1px solid grey;
+    margin-right: 5px;
+    padding: 5px;
+}
+.left-burger-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.shaped {
+    border-radius: 50px;
+}
+.channel-icon {
+    background-color: #FFFFFF;
+    color: #333333;
+    padding: 5px 10px 5px 10px;
+}
+.channel-icon:hover {
+    color: grey;
+}
+.row-form {
+    display: flex;
+    flex-direction: row;
+    gap: 7px;
+}
