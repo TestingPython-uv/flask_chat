@@ -14,12 +14,11 @@
         </div>
         <div class="right-burger-menu" style="display: none;">
             <!-- ТУТ ИЗМЕНИТЬ: в index.py добавить обработку и ответ и зарегать тут -->
-            <form action="{{ conn_type }}://{{ main_ip }}/index" method="post" class="row-form">
-                <input type="hidden" name="find_person" value="1">
 
-                <input type="text" name="person_to_find" placeholder="Найти пользователя">
-                <button type="submit"><img src="{{ url_for('static', filename='find.png') }}" width="40px" height="40px"></button>
-            </form>
+            <input type="text" placeholder="Найти пользователя" id="person_login">
+            <button onclick="find_person()"><img src="{{ url_for('static', filename='find.png') }}" width="40px" height="40px"></button>
+
+            <div id="input-chats"></div>
         </div>
     </div>
     <section class="base-section">
@@ -114,6 +113,48 @@
                         // ТУТ ИЗМЕНИТЬ: добавить обработку при нажатии на чат с пользователем;
                     });
                 });
+        }
+        
+        function find_person() {
+            const user_to_find = document.getElementById("person_login").value;
+            const contaier = document.getElementById("input-chats");
+            contaier.innerHTML = "";
+
+            fetch("{{ conn_type }}://{{ main_ip }}/index", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    find_user: "1",
+                    login: user_to_find
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                 const right_menu = document.querySelector(".right-burger-menu");
+
+                // data.username
+                if (data.exists) {
+                    const user_chat_button = document.createElement("button");
+                    user_chat_button.innerHTML = `
+                        <img src={{ url_for('static', filename='account.png') }} width='40px' height='40px'>
+                        <p>${user_to_find}</p>
+                    `;
+                    user_chat_button.classList.add("button-link", "row-form", "show-bg");
+                    user_chat_button.onclick = function() {
+                        window.location.href = `{{ conn_type }}://{{ main_ip }}/profile?user=${user_to_find}`;
+                    };
+
+                    contaier.appendChild(user_chat_button);
+                    // ТУТ ИЗМЕНИТЬ: добавить обработку открытия чата
+                } else {
+                    const error = document.createElement("p");
+                    error.textContent = "Пользователь не найден";
+                    error.style.color = "red";
+                    contaier.appendChild(error);
+                }
+            });
         }
     </script>
 </body>

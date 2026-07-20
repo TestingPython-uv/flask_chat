@@ -40,3 +40,10 @@ class ProfileRoute:
                     error="Пользователь не существует",
                     login=session.get("login")
                 )
+            
+        else:
+            if request.form.get("create_chat"):
+                main_user = session.get("login")
+                other_user = request.form.get("profile_user")
+
+                pass

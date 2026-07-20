@@ -132,3 +132,4 @@ class DataBase:
             friends_id = [fr for fr in friends_id if fr]
 
             return {"channels": channels_id, "friends": friends_id}
+        

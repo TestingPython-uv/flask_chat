@@ -41,6 +41,11 @@ class IndexRoute:
                 chats_data = self.db.get_user_chats(login)
                 return chats_data
             
+            elif request.form.get("find_user"):
+                login = request.form.get("login")
+                exists = self.db.check_user_exists(login, "users")
+                return {"exists": exists}
+            
             else:
                 return redirect(url_for("index"))
             
