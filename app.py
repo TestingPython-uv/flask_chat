@@ -35,7 +35,15 @@ tables = [
             message TEXT,
             question_sender TEXT,
             question_text TEXT
-        ) 
+        )
+    """,
+    """
+        CREATE TABLE IF NOT EXISTS chat_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            friend_id TEXT,
+            member_name TEXT,
+            message TEXT
+        )
     """
 ]
 db = DataBase("chat.db", tables)

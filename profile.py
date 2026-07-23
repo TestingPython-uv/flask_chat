@@ -13,6 +13,12 @@ class ProfileRoute:
         self.main_ip = main_ip # Айпи с которого запускаеться сервер
         self.conn_type = conn_type # Тип соединения: http | https
 
+        self.main_args = {
+            "template_name_or_list": self.profile_html, 
+            "main_ip": self.main_ip,
+            "conn_type": self.conn_type
+        }
+
         app.add_url_rule("/profile", view_func=self.profile, methods=["GET", 'POST'])
 
     @AuthRoute.check_session
@@ -25,18 +31,14 @@ class ProfileRoute:
                 creation_time = self.db.get_user_creation_time(username)
 
                 return render_template(
-                    self.profile_html,
+                    **self.main_args,
                     username=username,
                     creation_time=creation_time,
-                    main_ip=self.main_ip,
-                    conn_type=self.conn_type,
                     login=session.get("login")
                 )
             else:
                 return render_template(
-                    self.profile_html,
-                    main_ip=self.main_ip,
-                    conn_type=self.conn_type,
+                    **self.main_args,
                     error="Пользователь не существует",
                     login=session.get("login")
                 )
@@ -46,4 +48,6 @@ class ProfileRoute:
                 main_user = session.get("login")
                 other_user = request.form.get("profile_user")
 
-                pass
+                self.db.add_friend(main_user, other_user, "users")
+
+                return redirect(url_for("index"))

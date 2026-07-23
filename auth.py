@@ -18,6 +18,11 @@ class AuthRoute:
 
         self.db = db
 
+        self.main_args = {
+            "main_ip": self.main_ip,
+            "conn_type": self.conn_type
+        }
+
         app.add_url_rule("/auth", view_func=self.auth, methods=['GET', 'POST'])
         app.add_url_rule("/create_account", view_func=self.create_account, methods=['GET', 'POST'])
 
@@ -34,13 +39,13 @@ class AuthRoute:
                     session['login'] = login
                     return redirect(url_for(self.main_page))
                 else:
-                    return render_template(self.auth_html, error="Неверный логин или пароль", main_ip=self.main_ip, conn_type=self.conn_type)
+                    return render_template(self.auth_html, **self.main_args, error="Неверный логин или пароль")
             else:
                 return redirect(url_for("create_account"))
 
     def create_account(self):
         if request.method == 'GET':
-            return render_template(self.create_account_html, main_ip=self.main_ip, conn_type=self.conn_type)
+            return render_template(self.create_account_html, **self.main_args)
         else:
             login = request.form.get("login")
             password = request.form.get("password")
@@ -59,23 +64,20 @@ class AuthRoute:
                     else:
                         return render_template(
                             self.create_account_html, 
-                            error="Слишком большой логин или пароль", 
-                            main_ip=self.main_ip, 
-                            conn_type=self.conn_type
+                            error="Слишком большой логин или пароль",
+                            **self.main_args
                         )
                 else:
                     return render_template(
                         self.create_account_html, 
                         error="Слишком много аккаунтов",
-                        main_ip=self.main_ip, 
-                        conn_type=self.conn_type
+                        **self.main_args
                     )
             else:
                 return render_template(
                     self.create_account_html, 
                     error="Такой пользователь уже существует", 
-                    main_ip=self.main_ip, 
-                    conn_type=self.conn_type
+                    **self.main_args
                 )
     
     @staticmethod

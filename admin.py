@@ -22,5 +22,5 @@ class AdminRoute:
                 users=users,
                 messages=messages, 
                 main_ip=self.main_ip, 
-                conn_type=self.conn_type
+                conn_type=self.conn_type,
             )

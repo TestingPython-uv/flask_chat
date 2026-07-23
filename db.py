@@ -132,4 +132,14 @@ class DataBase:
             friends_id = [fr for fr in friends_id if fr]
 
             return {"channels": channels_id, "friends": friends_id}
-        
+
+    def add_friend(self, username: str, friend_username: str, users_table: str) -> None:
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+
+            cursor.execute(f"SELECT friend_users_id FROM {users_table} WHERE login = ?", (username,))
+            line_friends = cursor.fetchone()[0] if cursor.fetchone()[0] is not None else ""
+            line_friends += friend_username + ";"
+
+            cursor.execute(f"UPDATE {users_table} SET friend_users_id = ? WHERE login = ?", (line_friends, username))
+            conn.commit()
