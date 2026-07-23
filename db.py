@@ -124,7 +124,7 @@ class DataBase:
 
             # channels_id, friend_users_id = "x;x;x;"
             
-            channels_id_str, friends_id_str = cursor.fetchall()
+            channels_id_str, friends_id_str = cursor.fetchone()
             channels_id = channels_id_str.split(";") if channels_id_str else []
             friends_id = friends_id_str.split(";") if friends_id_str else []
 
@@ -138,8 +138,10 @@ class DataBase:
             cursor = conn.cursor()
 
             cursor.execute(f"SELECT friend_users_id FROM {users_table} WHERE login = ?", (username,))
-            line_friends = cursor.fetchone()[0] if cursor.fetchone()[0] is not None else ""
+            row = cursor.fetchone()
+            line_friends = row[0] if row and row[0] is not None else ""
             line_friends += friend_username + ";"
 
             cursor.execute(f"UPDATE {users_table} SET friend_users_id = ? WHERE login = ?", (line_friends, username))
             conn.commit()
+

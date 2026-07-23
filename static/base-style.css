@@ -173,14 +173,15 @@ th, td {
     flex-direction: row;
     gap: 7px;
     align-items: center;
+    width: 100%;
 }
 .show-bg {
     background-color: #404040;
     border: 1px solid grey;
 }
-#input-chats {
+.input-chats {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    width: auto; /* или убрать width:100% */
+    width: auto;
 }

@@ -3,31 +3,14 @@
 {% block content %}
     <section class="index-section">
         <main class="space-between">
-            <div id="scroll">
+            <h1 style="text-align: center;">Выберите чат</h1>
+
+            <div id="scroll" style="display: none;">
                 {% for message in messages %}
-                    {% if message.type == "2" %}
-                    <!-- Если это обычное сообщение (не ответ) -->
-
-                        <button class="button-link" onclick="window.location.href = '{{ conn_type }}://{{ main_ip }}/profile?user={{ message.sender }}'">
-                            [{{ message.sender }}]: 
-                        </button>
-                        <button onclick="show_msg_funcs('msg-{{ message.index }}')" class="button-link" id="btn-text">{{ message.text }}</button>
-                    {% else %}
-                    <!-- Если это ответ на сообщение -->
-                        <input type="hidden" id="question-sender" value="{{ message.question_sender }}">
-                        <input type="hidden" id="question-text" value="{{ message.text }}">
-
-                        <script>message_type = "answer";</script>
-
-                        <div class="question-sender">
-                            <img src="{{ url_for('static', filename='arrow.png') }}" width="40px" height="40px">
-                            <p>[{{ message.question_sender }}]: {{ message.question_text }}</p>
-                        </div>
-                        <div class="answer-sender">
-                            <button class="button-link">[{{ message.sender }}]: </button>
-                            <button onclick="show_msg_funcs('msg-{{ message.index }}')" class="button-link" id="btn-text">{{ message.text }}</button>
-                        </div>
-                    {% endif %}
+                    <button class="button-link" onclick="window.location.href = '{{ conn_type }}://{{ main_ip }}/profile?user={{ message.sender }}'">
+                        [{{ message.sender }}]:
+                    </button>
+                    <button onclick="show_msg_funcs('msg-{{ message.index }}')" class="button-link" id="btn-text">{{ message.text }}</button>
 
                     <div class="msg-funcs" style="display: none;" id="msg-{{ message.index }}">
                         {% if login == message.sender %}
@@ -51,11 +34,13 @@
                     <br>
                 {% endfor %}
             </div>
+
             <div id="answer-fild" style="display: none;">
                 <img src="{{ url_for('static', filename='arrow.png') }}" width="40px" height="40px">
             </div>
         </main>
-        <footer>
+
+        <footer style="display: none;">
             <textarea type="text" placeholder="Ваше сообщение" id="message"></textarea>
             <button onclick="send_text()">Отправить</button>
         </footer>

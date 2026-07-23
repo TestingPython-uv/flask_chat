@@ -18,7 +18,15 @@
             <input type="text" placeholder="Найти пользователя" id="person_login">
             <button onclick="find_person()"><img src="{{ url_for('static', filename='find.png') }}" width="40px" height="40px"></button>
 
-            <div id="input-chats"></div>
+            <div id="found-users" style="display: none;" class="input-chats">
+                <h1>Поиск</h1>
+                <div id="found-users-2"></div>
+            </div>
+
+            <div class="input-chats" id="input-chats">
+                <h1>Друзья</h1>
+                <div id="input-chats-2"></div>
+            </div>
         </div>
     </div>
     <section class="base-section">
@@ -72,7 +80,7 @@
                     data.channels.forEach(channel => {
                         const button_channel = document.createElement("button");
                         button_channel.textContent = channel[0].toUpperCase();
-                        button_channel.classList.app("button-link", "shaped", "channel-icon");
+                        button_channel.classList.add("button-link", "shaped", "channel-icon");
                         burger_menu.appendChild(button_channel);
                     });
                 });
@@ -92,12 +100,15 @@
             left_burger_menu.style.borderRight = "1px solid grey";
             left_burger_menu.style.marginRight = "5px";
 
+            const input_chats = document.getElementById("input-chats-2");
+            input_chats.innerHTML = "";
+
             fetch("{{ conn_type }}://{{ main_ip }}/index", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"
                     },
-                    body: URLSearchParams({
+                    body: new URLSearchParams({
                         get_user_chats: "1"
                     })
                 })
@@ -106,10 +117,11 @@
                     data.friends.forEach(username => {
                         const user_chat_button = document.createElement("button");
                         user_chat_button.innerHTML = `
-                            <img src={{ url_for('static', filename='account.png') }} width='40px' height='40px'>
+                            <img src="{{ url_for('static', filename='account.png') }}" width='40px' height='40px'>
                             <p>${username}</p>
                         `;
-                        user_chat_button.className = "button-link";
+                        user_chat_button.classList.add("button-link", "row-form", "show-bg");
+                        input_chats.appendChild(user_chat_button);
                         // ТУТ ИЗМЕНИТЬ: добавить обработку при нажатии на чат с пользователем;
                     });
                 });
@@ -117,8 +129,12 @@
         
         function find_person() {
             const user_to_find = document.getElementById("person_login").value;
-            const contaier = document.getElementById("input-chats");
-            contaier.innerHTML = "";
+
+            const main_container = document.getElementById("found-users");
+            main_container.style.display = "block";
+
+            const container = document.getElementById("found-users-2");
+            container.innerHTML = "";
 
             fetch("{{ conn_type }}://{{ main_ip }}/index", {
                 method: "POST",
@@ -132,13 +148,11 @@
             })
             .then(response => response.json())
             .then(data => {
-                 const right_menu = document.querySelector(".right-burger-menu");
-
                 // data.username
                 if (data.exists) {
                     const user_chat_button = document.createElement("button");
                     user_chat_button.innerHTML = `
-                        <img src={{ url_for('static', filename='account.png') }} width='40px' height='40px'>
+                        <img src="{{ url_for('static', filename='account.png') }}" width='40px' height='40px'>
                         <p>${user_to_find}</p>
                     `;
                     user_chat_button.classList.add("button-link", "row-form", "show-bg");
@@ -146,13 +160,13 @@
                         window.location.href = `{{ conn_type }}://{{ main_ip }}/profile?user=${user_to_find}`;
                     };
 
-                    contaier.appendChild(user_chat_button);
+                    container.appendChild(user_chat_button);
                     // ТУТ ИЗМЕНИТЬ: добавить обработку открытия чата
                 } else {
                     const error = document.createElement("p");
                     error.textContent = "Пользователь не найден";
                     error.style.color = "red";
-                    contaier.appendChild(error);
+                    container.appendChild(error);
                 }
             });
         }
